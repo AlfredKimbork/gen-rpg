@@ -1,0 +1,234 @@
+locations:
+  - id: lanterns_rest
+    name: "The Lantern's Rest"
+    type: tavern
+
+    description: >-
+      A modest tavern filled with the smell of woodsmoke,
+      old ale, and damp wool. A fireplace burns at the
+      far end of the room. Several tables stand empty.
+
+    atmosphere:
+      lighting: warm
+      danger: low
+      mood: suspicious
+
+    npcs:
+      - garrick_voss
+
+    connections:
+      - hollowmere_square
+
+    interactables:
+      - id: notice_board
+        description: "A wooden board covered in notices."
+        discovery: "A reward is offered for missing villagers."
+
+      - id: locked_storage
+        description: "A locked storage room behind the bar."
+        locked: true
+        unlock_dc: 14
+        contents:
+          - old_mercenary_badge
+
+      - id: fireplace
+        description: "A large stone fireplace."
+        discovery: "A torn scrap of a missing-person notice."
+
+    events:
+      - id: tavern_rumors
+        trigger: "ask_about_disappearances"
+        effect: "Garrick shares information he knows."
+
+  - id: hollowmere_square
+    name: "Hollowmere Village Square"
+    type: settlement
+
+    description: >-
+      A muddy village square surrounded by timber
+      houses. An empty bell frame stands near the
+      center. The ruined watchtower can be seen
+      beyond the village rooftops.
+
+    atmosphere:
+      lighting: dim
+      danger: low
+      mood: uneasy
+
+    connections:
+      - lanterns_rest
+      - village_hall
+      - old_chapel
+      - blackpine_edge
+
+    interactables:
+      - id: empty_bell_frame
+        description: "An old wooden structure with no bell."
+        discovery: "The midnight ringing has no physical source."
+
+      - id: village_well
+        description: "A deep stone well."
+        discovery: "Faint whispers sometimes rise from below."
+
+  - id: village_hall
+    name: "Village Hall"
+    type: building
+
+    description: >-
+      A large timber hall containing village records,
+      old maps, and a locked cabinet of historical
+      documents.
+
+    npcs:
+      - elira_thorne
+
+    connections:
+      - hollowmere_square
+
+    interactables:
+      - id: historical_cabinet
+        description: "A locked cabinet containing old records."
+        locked: true
+        unlock_dc: 16
+        contents:
+          - founders_journal
+
+      - id: village_records
+        description: "A collection of village documents."
+        discovery: "Several names recur in disappearance records."
+
+  - id: old_chapel
+    name: "The Old Chapel"
+    type: religious_site
+
+    description: >-
+      A small stone chapel with cracked stained-glass
+      windows. Its altar is covered in faded symbols
+      that resemble open eyes.
+
+    npcs:
+      - brother_alden
+
+    connections:
+      - hollowmere_square
+
+    interactables:
+      - id: ancient_altar
+        description: "A stone altar carved with forgotten symbols."
+        discovery: "The symbols relate to memory and protection."
+
+      - id: chapel_archive
+        description: "A shelf of damaged religious manuscripts."
+        discovery: "A ritual once strengthened an ancient seal."
+
+  - id: blackpine_edge
+    name: "Blackpine Forest Edge"
+    type: wilderness
+
+    description: >-
+      Tall black pines surround a narrow woodland path.
+      The air is cold and unnaturally still. No birds
+      can be heard.
+
+    npcs:
+      - mira_fen
+
+    connections:
+      - hollowmere_square
+      - blackpine_depths
+
+    interactables:
+      - id: broken_arrow
+        description: "A hunting arrow embedded in a tree."
+        discovery: "The arrow belongs to Mira's missing sister."
+
+      - id: strange_tracks
+        description: "Footprints leading deeper into the forest."
+        discovery: "Several villagers walked here willingly."
+
+  - id: blackpine_depths
+    name: "Blackpine Forest Depths"
+    type: wilderness
+
+    description: >-
+      Ancient trees block most of the sunlight.
+      Strange blue lights drift between their roots.
+      A ruined stone path leads toward the watchtower.
+
+    connections:
+      - blackpine_edge
+      - ruined_watchtower
+
+    encounters:
+      - corrupted_wolves
+
+    interactables:
+      - id: glowing_stones
+        description: "Small stones emitting a pale blue glow."
+        discovery: "The stones react to memories and emotions."
+
+      - id: old_marker
+        description: "A weathered stone marker."
+        discovery: "The marker identifies the old sanctuary road."
+
+  - id: ruined_watchtower
+    name: "Ruined Watchtower"
+    type: ruins
+
+    description: >-
+      A collapsed stone tower overlooking the forest.
+      Its lower chambers remain intact, and strange
+      symbols glow faintly beneath the rubble.
+
+    connections:
+      - blackpine_depths
+      - forgotten_sanctuary
+
+    interactables:
+      - id: sealed_staircase
+        description: "A staircase blocked by an ancient seal."
+        requires:
+          any:
+            - ritual_key
+            - successful_arcana_check
+            - seal_broken
+
+      - id: founders_inscription
+        description: "An inscription carved into the tower."
+        discovery: "The founders made a bargain with something below."
+
+    encounters:
+      - memory_guardian
+
+  - id: forgotten_sanctuary
+    name: "Forgotten Sanctuary"
+    type: dungeon
+
+    description: >-
+      An enormous underground chamber filled with
+      floating fragments of blue light.
+
+      Memories drift through the air like glowing
+      particles, occasionally forming images of
+      people and places.
+
+      At the center stands an ancient stone altar.
+
+    npcs:
+      - the_listener
+
+    connections:
+      - ruined_watchtower
+
+    interactables:
+      - id: memory_altar
+        description: "An altar used to exchange memories."
+        discovery: "The pact can be renewed or altered."
+
+      - id: ancient_seal
+        description: "A magical seal containing The Listener."
+        discovery: "Destroying it may release dangerous forces."
+
+      - id: memory_prison
+        description: "A chamber holding the missing villagers."
+        discovery: "The villagers are alive but weakened."

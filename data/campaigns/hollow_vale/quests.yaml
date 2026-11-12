@@ -1,0 +1,105 @@
+quests:
+  - id: missing_villagers
+    title: "The Missing Villagers"
+    type: main
+    description: >-
+      Investigate the disappearance of several
+      Hollowmere residents.
+
+    start_conditions:
+      location: lanterns_rest
+
+    objectives:
+      - id: learn_disappearances
+        description: "Learn about the missing villagers."
+        completion_flag: knows_about_disappearances
+
+      - id: investigate_forest
+        description: "Find evidence in Blackpine Forest."
+        required_discovery: strange_tracks
+
+      - id: locate_sanctuary
+        description: "Discover the forgotten sanctuary."
+        completion_flag: sanctuary_opened
+
+      - id: resolve_disappearances
+        description: "Determine the villagers' fate."
+        required_flag: campaign_completed
+
+    rewards:
+      experience: 150
+      gold: 25
+
+  - id: find_lyra
+    title: "A Sister Lost"
+    type: side
+    description: >-
+      Help Mira Fen locate her missing sister.
+
+    start_conditions:
+      npc_interaction: mira_fen
+
+    objectives:
+      - id: gain_mira_trust
+        description: "Gain Mira's trust."
+        minimum_trust: 2
+
+      - id: find_lyra_clue
+        description: "Discover evidence of Lyra's path."
+        required_discovery: broken_arrow
+
+      - id: rescue_lyra
+        description: "Find and rescue Lyra."
+        required_event: lyra_rescued
+
+    rewards:
+      experience: 75
+      items:
+        - ranger_charm
+
+  - id: forgotten_pact
+    title: "The Forgotten Pact"
+    type: main
+    description: >-
+      Discover the truth about the ancient bargain.
+
+    start_conditions:
+      discovery: founders_inscription
+
+    objectives:
+      - id: find_records
+        description: "Recover the founders' journal."
+        required_item: founders_journal
+
+      - id: confront_elira
+        description: "Question Elira about the pact."
+        required_event: elira_confronted
+
+      - id: learn_listener
+        description: "Discover The Listener's identity."
+        completion_flag: knows_listener_identity
+
+    rewards:
+      experience: 125
+
+  - id: restore_seal
+    title: "The Price of Protection"
+    type: main
+    description: >-
+      Decide whether to preserve, change, or destroy
+      the ancient pact.
+
+    start_conditions:
+      flag: knows_about_pact
+
+    objectives:
+      - id: reach_listener
+        description: "Reach The Listener."
+        required_location: forgotten_sanctuary
+
+      - id: decide_fate
+        description: "Determine the fate of the pact."
+        required_flag: campaign_completed
+
+    rewards:
+      experience: 200

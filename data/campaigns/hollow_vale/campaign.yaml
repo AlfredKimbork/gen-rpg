@@ -1,0 +1,175 @@
+id: hollow_vale
+title: "The Hollow Vale"
+version: "1.0"
+genre: dark_fantasy
+
+description: >-
+  A mystery-driven fantasy adventure set in an isolated
+  village where residents have begun disappearing at night.
+  The player must investigate an ancient pact, discover
+  the truth beneath a ruined watchtower, and decide
+  the fate of the village.
+
+themes:
+  - mystery
+  - memory
+  - sacrifice
+  - trust
+  - moral_ambiguity
+
+tone:
+  atmosphere: dark_and_mysterious
+  violence: moderate
+  humor: occasional
+  horror: psychological
+  player_freedom: high
+
+starting_state:
+  location: lanterns_rest
+  time: evening
+  weather: heavy_rain
+  player_level: 1
+  starting_gold: 15
+
+  flags:
+    knows_about_disappearances: false
+    knows_about_pact: false
+    knows_listener_identity: false
+    mira_recruited: false
+    elder_exposed: false
+    sanctuary_opened: false
+    seal_destroyed: false
+    campaign_completed: false
+
+starting_narration: |
+  Rain lashes against the cobbled road as you approach
+  the village of Hollowmere.
+
+  The village appears almost abandoned. A handful of
+  windows glow faintly through the darkness.
+
+  Above the rooftops stands a ruined watchtower,
+  silhouetted against the storm clouds.
+
+  As you reach the village square, a bell begins to ring.
+
+  Once.
+  Twice.
+  Three times.
+
+  You look toward the chapel, but its bell tower
+  stands empty.
+
+  Across the square, warm light spills from a tavern
+  called The Lantern's Rest.
+
+  What do you do?
+
+public_lore:
+  village: Hollowmere
+  region: Hollow Vale
+  forest: Blackpine Forest
+
+  history: >-
+    Hollowmere was founded centuries ago by settlers
+    fleeing creatures that inhabited the surrounding
+    forest. The village has survived despite its
+    isolation, but its earliest history has been lost.
+
+  current_events:
+    - "Several villagers have disappeared."
+    - "A mysterious bell rings at midnight."
+    - "The forest has become unusually quiet."
+    - "Some villagers report hearing familiar voices."
+
+dm_secrets:
+  ancient_entity:
+    name: The Listener
+    location: forgotten_sanctuary
+
+    truth: >-
+      The Listener is an ancient intelligence that
+      survives by absorbing memories. It was bound
+      beneath the watchtower by Hollowmere's founders.
+
+    motivation: >-
+      The Listener wishes to survive. It does not
+      understand why humans value their memories
+      so deeply.
+
+  ancient_pact:
+    description: >-
+      The founders promised one memory from each
+      resident every year in exchange for protection
+      from the creatures of Blackpine Forest.
+
+    status: failing
+
+  disappearances:
+    truth: >-
+      Missing villagers have been drawn into the
+      sanctuary by the weakening seal. They are alive,
+      but their memories are being consumed.
+
+    missing_villagers:
+      - lyra_fen
+      - thomas_reed
+      - edwin_moss
+
+  bell:
+    truth: >-
+      The bell is a supernatural warning produced
+      by the failing seal. It has no physical source.
+
+narrative_rules:
+  - "Never contradict established campaign facts."
+  - "Never reveal DM secrets without sufficient discovery."
+  - "Allow creative approaches to problems."
+  - "Do not force the player toward a specific ending."
+  - "Do not invent successful dice rolls."
+  - "Do not directly change player stats or inventory."
+  - "Do not resurrect dead NPCs without an established mechanic."
+  - "NPCs act according to their knowledge and motivations."
+  - "Failure should create consequences, not always dead ends."
+  - "Do not narrate unverified mechanical outcomes."
+
+mechanics:
+  dice_system: d20
+
+  difficulty_classes:
+    easy: 8
+    normal: 12
+    hard: 16
+    very_hard: 20
+    extreme: 24
+
+  attributes:
+    - strength
+    - dexterity
+    - constitution
+    - intelligence
+    - wisdom
+    - charisma
+
+  skill_checks:
+    persuasion: charisma
+    deception: charisma
+    intimidation: charisma
+    stealth: dexterity
+    sleight_of_hand: dexterity
+    investigation: intelligence
+    arcana: intelligence
+    perception: wisdom
+    survival: wisdom
+    athletics: strength
+
+  combat:
+    initiative_die: d20
+    attack_die: d20
+    minimum_damage: 0
+
+    rules:
+      - "One action per combat turn."
+      - "Damage is calculated by the backend."
+      - "Enemies cannot act after death."
+      - "Combat can end through surrender or escape."

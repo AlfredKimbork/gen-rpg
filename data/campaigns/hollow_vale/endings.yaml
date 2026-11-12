@@ -1,0 +1,108 @@
+endings:
+  - id: renewed_pact
+    title: "The Old Bargain"
+    type: bittersweet
+
+    requirements:
+      location: forgotten_sanctuary
+      listener_alive: true
+      pact_renewed: true
+
+    consequences:
+      village_survives: true
+      listener_survives: true
+      disappearances_stop: true
+      memory_sacrifice_continues: true
+
+    narration: |
+      The ancient seal glows once more.
+
+      Hollowmere is safe, and the missing villagers
+      slowly return to their homes.
+
+      But the price of protection remains.
+
+      Every year, the village must surrender
+      something it can never recover.
+
+      The bargain survives.
+
+  - id: destroyed_seal
+    title: "Freedom at a Price"
+    type: tragic
+
+    requirements:
+      location: forgotten_sanctuary
+      seal_destroyed: true
+
+    consequences:
+      village_survives: false
+      listener_survives: false
+      forest_protection_lost: true
+
+    narration: |
+      The seal shatters.
+
+      For a moment, the sanctuary becomes
+      impossibly bright.
+
+      Then the light disappears.
+
+      The Listener is gone, and the village
+      is free from its ancient bargain.
+
+      But beyond Hollowmere, the creatures
+      of Blackpine Forest begin to stir.
+
+  - id: peaceful_agreement
+    title: "A New Understanding"
+    type: hopeful
+
+    requirements:
+      location: forgotten_sanctuary
+      listener_alive: true
+      peaceful_agreement: true
+
+    consequences:
+      village_survives: true
+      listener_survives: true
+      disappearances_stop: true
+      voluntary_memories: true
+
+    narration: |
+      For the first time in centuries,
+      The Listener agrees to change.
+
+      Memories will no longer be taken.
+
+      Those willing to share their past
+      may offer it freely.
+
+      The village remains protected,
+      and the ancient bargain becomes
+      something entirely new.
+
+  - id: abandoned_village
+    title: "The Road Beyond"
+    type: unresolved
+
+    requirements:
+      player_left_region: true
+      campaign_completed: false
+
+    consequences:
+      village_fate: unknown
+      mystery_unresolved: true
+
+    narration: |
+      You leave Hollowmere behind.
+
+      The village disappears into the mist,
+      and the ruined watchtower fades
+      beyond the distant trees.
+
+      You never learn what became
+      of the missing villagers.
+
+      But sometimes, on quiet nights,
+      you still hear a bell ringing.

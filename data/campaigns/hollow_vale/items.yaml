@@ -1,0 +1,87 @@
+items:
+  - id: rusty_sword
+    name: "Rusty Sword"
+    type: weapon
+    rarity: common
+    description: "An old iron sword with a worn edge."
+    value: 5
+    properties:
+      damage_dice: "1d6"
+      damage_attribute: strength
+      weight: 3
+
+  - id: hunting_bow
+    name: "Hunting Bow"
+    type: weapon
+    rarity: common
+    description: "A reliable wooden hunting bow."
+    value: 15
+    properties:
+      damage_dice: "1d6"
+      damage_attribute: dexterity
+      weight: 2
+
+  - id: healing_potion
+    name: "Healing Potion"
+    type: consumable
+    rarity: common
+    description: "A red liquid that restores health."
+    value: 20
+    properties:
+      healing_dice: "2d4+2"
+      consumed_on_use: true
+
+  - id: founders_journal
+    name: "Founder's Journal"
+    type: quest_item
+    rarity: rare
+    description: >-
+      An old journal describing Hollowmere's founding
+      and a mysterious agreement.
+    value: 0
+    properties:
+      reveals:
+        - ancient_pact
+
+  - id: ritual_key
+    name: "Ritual Key"
+    type: quest_item
+    rarity: rare
+    description: >-
+      A silver key engraved with symbols resembling
+      an open eye.
+    value: 0
+    properties:
+      unlocks:
+        - sealed_staircase
+
+  - id: old_mercenary_badge
+    name: "Old Mercenary Badge"
+    type: miscellaneous
+    rarity: uncommon
+    description: >-
+      A tarnished badge from Garrick's former
+      mercenary company.
+    value: 10
+    properties:
+      related_npc: garrick_voss
+
+  - id: ranger_charm
+    name: "Ranger's Charm"
+    type: accessory
+    rarity: uncommon
+    description: "A small wooden charm carved by Mira."
+    value: 15
+    properties:
+      survival_bonus: 1
+
+  - id: memory_crystal
+    name: "Memory Crystal"
+    type: quest_item
+    rarity: rare
+    description: >-
+      A glowing crystal containing fragments
+      of someone's memories.
+    value: 0
+    properties:
+      related_entity: the_listener

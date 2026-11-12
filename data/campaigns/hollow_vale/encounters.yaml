@@ -1,0 +1,53 @@
+encounters:
+  - id: corrupted_wolves
+    name: "Corrupted Wolves"
+    location: blackpine_depths
+    type: combat
+    difficulty: easy
+
+    description: >-
+      Two wolves emerge from the shadows.
+      Their eyes glow faintly blue, and their
+      movements appear unnatural.
+
+    enemies:
+      - id: corrupted_wolf_1
+        name: "Corrupted Wolf"
+        hp: 8
+        defense: 11
+        attack_bonus: 2
+        damage_dice: "1d4+1"
+
+      - id: corrupted_wolf_2
+        name: "Corrupted Wolf"
+        hp: 8
+        defense: 11
+        attack_bonus: 2
+        damage_dice: "1d4+1"
+
+    rewards:
+      experience: 40
+
+  - id: memory_guardian
+    name: "Memory Guardian"
+    location: ruined_watchtower
+    type: boss
+    difficulty: hard
+
+    description: >-
+      A spectral knight formed from fragments
+      of forgotten memories guards the entrance
+      to the sanctuary.
+
+    enemies:
+      - id: guardian
+        name: "Memory Guardian"
+        hp: 28
+        defense: 14
+        attack_bonus: 4
+        damage_dice: "1d8+2"
+
+    rewards:
+      experience: 100
+      items:
+        - memory_crystal

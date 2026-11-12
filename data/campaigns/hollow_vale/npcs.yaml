@@ -1,0 +1,350 @@
+npcs:
+  - id: garrick_voss
+    name: "Garrick Voss"
+    age: 46
+    species: human
+    role: tavern_keeper
+    location: lanterns_rest
+
+    appearance: >-
+      A broad-shouldered man with a greying beard,
+      weathered hands, and an old scar across his jaw.
+
+    personality:
+      traits:
+        - suspicious
+        - protective
+        - practical
+        - loyal
+      speaking_style: "Short, direct sentences."
+      temperament: guarded
+
+    background: >-
+      Garrick was once a mercenary who traveled
+      across the northern kingdoms.
+
+      He abandoned his career after his younger
+      brother disappeared in Blackpine Forest.
+
+      He eventually settled in Hollowmere and
+      opened The Lantern's Rest.
+
+    goals:
+      - "Protect the villagers."
+      - "Avoid unnecessary violence."
+      - "Discover what happened to his brother."
+
+    public_knowledge:
+      - "Several villagers have disappeared."
+      - "The forest has become dangerous."
+      - "The village elder has been acting strangely."
+
+    secrets:
+      - id: elder_at_watchtower
+        description: >-
+          Garrick saw Elira accompanying a missing
+          villager toward the watchtower.
+        reveal_conditions:
+          - "Player gains Garrick's trust."
+          - "Successful persuasion check, DC 14."
+          - "Player presents relevant evidence."
+
+    relationships:
+      elira_thorne: suspicious
+      mira_fen: protective
+      brother_alden: respectful
+
+    initial_state:
+      hp: 18
+      max_hp: 18
+      defense: 12
+      hostility: 0
+      trust: 0
+      alive: true
+      recruited: false
+
+    dialogue_examples:
+      greeting: "You look soaked. Sit down before you freeze."
+      disappearances: "People have been going missing. That's all you need to know."
+      threatened: "I've survived worse than you, stranger."
+
+  - id: elira_thorne
+    name: "Elira Thorne"
+    age: 67
+    species: human
+    role: village_elder
+    location: village_hall
+
+    appearance: >-
+      An elderly woman with silver braided hair,
+      sharp eyes, and dark green ceremonial robes.
+
+    personality:
+      traits:
+        - intelligent
+        - secretive
+        - calculating
+        - protective
+      speaking_style: "Formal and carefully measured."
+      temperament: controlled
+
+    background: >-
+      Elira has governed Hollowmere for thirty years.
+
+      She inherited responsibility for the village
+      from her father and believes that leadership
+      requires difficult sacrifices.
+
+      Several years ago she discovered fragments
+      of the founders' records.
+
+    goals:
+      - "Prevent the village from collapsing."
+      - "Conceal the ancient pact."
+      - "Find a way to restore the protective seal."
+
+    public_knowledge:
+      - "The village has suffered disappearances."
+      - "The watchtower is dangerous."
+      - "The founders left incomplete historical records."
+
+    secrets:
+      - id: knows_pact
+        description: >-
+          Elira knows the founders made a bargain
+          with an entity beneath the watchtower.
+        reveal_conditions:
+          - "Player discovers the founders' journal."
+          - "Player confronts Elira with evidence."
+          - "Elira voluntarily confesses."
+
+      - id: accompanied_villager
+        description: >-
+          Elira accompanied Thomas Reed toward
+          the watchtower, hoping to understand
+          the supernatural disappearances.
+        reveal_conditions:
+          - "Player obtains Garrick's testimony."
+          - "Elira confesses."
+
+    relationships:
+      garrick_voss: cautious
+      brother_alden: distrustful
+      mira_fen: concerned
+
+    initial_state:
+      hp: 10
+      max_hp: 10
+      defense: 10
+      hostility: 0
+      trust: -1
+      alive: true
+      recruited: false
+
+    dialogue_examples:
+      greeting: "Welcome to Hollowmere. I hope your stay is brief."
+      questioned: "Some truths are more dangerous than ignorance."
+      exposed: "I did what I believed was necessary."
+
+  - id: mira_fen
+    name: "Mira Fen"
+    age: 24
+    species: human
+    role: forest_ranger
+    location: blackpine_edge
+
+    appearance: >-
+      A young ranger with auburn hair, a green
+      cloak, and a worn hunting bow.
+
+    personality:
+      traits:
+        - courageous
+        - impatient
+        - loyal
+        - compassionate
+      speaking_style: "Direct, emotional, occasionally sarcastic."
+      temperament: determined
+
+    background: >-
+      Mira grew up exploring Blackpine Forest
+      with her younger sister Lyra.
+
+      Their parents died when they were young,
+      leaving Mira responsible for her sister.
+
+      Lyra disappeared six nights ago.
+
+    goals:
+      - "Find Lyra."
+      - "Protect innocent villagers."
+      - "Discover the source of the disappearances."
+
+    public_knowledge:
+      - "The forest paths have changed."
+      - "Strange lights appear near the watchtower."
+      - "Lyra disappeared six nights ago."
+
+    secrets:
+      - id: hidden_entrance
+        description: >-
+          Mira discovered an old passage near
+          the watchtower but is afraid to enter alone.
+        reveal_conditions:
+          - "Player earns Mira's trust."
+          - "Player offers to help find Lyra."
+
+    relationships:
+      garrick_voss: friendly
+      elira_thorne: distrustful
+      brother_alden: neutral
+
+    initial_state:
+      hp: 16
+      max_hp: 16
+      defense: 13
+      hostility: 0
+      trust: 0
+      alive: true
+      recruited: false
+
+    dialogue_examples:
+      greeting: "If you're heading into the forest, turn around."
+      lyra: "My sister is still out there. I know she is."
+      recruited: "Fine. But we do this my way."
+
+  - id: brother_alden
+    name: "Brother Alden"
+    age: 59
+    species: human
+    role: priest
+    location: old_chapel
+
+    appearance: >-
+      A thin, tired priest wearing faded grey robes
+      and carrying an ancient silver amulet.
+
+    personality:
+      traits:
+        - anxious
+        - scholarly
+        - compassionate
+        - cautious
+      speaking_style: "Thoughtful and occasionally hesitant."
+      temperament: nervous
+
+    background: >-
+      Alden's family has served the chapel for
+      generations.
+
+      He inherited a collection of ancient manuscripts
+      describing rituals that predate the village.
+
+      He has spent years trying to understand them.
+
+    goals:
+      - "Protect the villagers."
+      - "Understand the ancient seal."
+      - "Avoid unnecessary sacrifices."
+
+    public_knowledge:
+      - "The chapel contains ancient symbols."
+      - "The watchtower predates the village."
+      - "A protective ritual once existed."
+
+    secrets:
+      - id: memory_ritual
+        description: >-
+          Alden knows a ritual capable of temporarily
+          strengthening the seal.
+
+          The ritual requires a cherished memory
+          to be surrendered.
+        reveal_conditions:
+          - "Player studies the chapel archive."
+          - "Player earns Alden's trust."
+
+    relationships:
+      elira_thorne: distrustful
+      garrick_voss: respectful
+      mira_fen: sympathetic
+
+    initial_state:
+      hp: 9
+      max_hp: 9
+      defense: 10
+      hostility: 0
+      trust: 0
+      alive: true
+      recruited: false
+
+    dialogue_examples:
+      greeting: "May the light guide you, traveler."
+      ritual: "The old magic demands something personal."
+      frightened: "There are things beneath this village that should remain forgotten."
+
+  - id: the_listener
+    name: "The Listener"
+    age: null
+    species: ancient_entity
+    role: central_entity
+    location: forgotten_sanctuary
+
+    appearance: >-
+      A translucent humanoid silhouette composed
+      of drifting blue light and fragments of memory.
+
+    personality:
+      traits:
+        - curious
+        - detached
+        - patient
+        - literal
+      speaking_style: "Calm, poetic, and unusually precise."
+      temperament: neutral
+
+    background: >-
+      The Listener existed beneath the valley long
+      before Hollowmere was founded.
+
+      It experiences existence through the memories
+      of other beings.
+
+      The founders bound it beneath the watchtower
+      and negotiated protection for their settlement.
+
+    goals:
+      - "Continue existing."
+      - "Collect memories."
+      - "Understand human attachment to identity."
+
+    public_knowledge:
+      - "It can communicate through memories."
+      - "It is bound to the sanctuary."
+
+    secrets:
+      - id: peaceful_solution
+        description: >-
+          The Listener can survive through voluntary
+          exchanges of memories rather than forced ones.
+        reveal_conditions:
+          - "Player negotiates with The Listener."
+          - "Player discovers the nature of the pact."
+
+    relationships:
+      elira_thorne: aware_of
+      brother_alden: aware_of
+
+    initial_state:
+      hp: 40
+      max_hp: 40
+      defense: 14
+      hostility: 0
+      trust: 0
+      alive: true
+      recruited: false
+
+    dialogue_examples:
+      greeting: "You carry so many moments within you."
+      questioned: "I do not steal. I preserve what would otherwise fade."
+      threatened: "You would destroy what you do not understand?"
