@@ -40,10 +40,10 @@ def create_turn(
     *,
     session: GameSession,
     action_id: UUID,
-    action_type: str,
     player_action: str,
     narration: str,
     mechanical_result: dict,
+    original_message: str = "",
 ) -> GameTurn:
     last_turn_number = (
         GameTurn.objects.filter(session=session).aggregate(last=Max("number"))["last"]
@@ -59,6 +59,7 @@ def create_turn(
         player_action=player_action,
         narration=narration,
         mechanical_result=mechanical_result,
+        original_message=original_message,
     )
 
     session.turn_number = next_turn_number  # pyright: ignore

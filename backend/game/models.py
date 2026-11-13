@@ -104,6 +104,11 @@ class GameTurn(models.Model):
     player_action = models.TextField()
     narration = models.TextField(blank=True)
     mechanical_result = models.JSONField(default=dict)
+
+    original_message = models.TextField(
+        blank=True,
+        default="",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

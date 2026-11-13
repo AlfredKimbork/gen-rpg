@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from uuid import UUID
 
 from django.core.exceptions import ValidationError
@@ -106,7 +105,6 @@ def process_attack(
     return create_turn(
         session=session,
         action_id=action_id,
-        action_type="attack",
         player_action=f"Attack {target_slug} with {weapon_slug}",
         narration=narration,
         mechanical_result={
@@ -175,7 +173,6 @@ def process_movement(
     return create_turn(
         session=session,
         action_id=action_id,
-        action_type="move",
         player_action=f"Move to {destination_slug}",
         narration=narration,
         mechanical_result={
@@ -247,7 +244,6 @@ def process_inspect(
     return create_turn(
         session=session,
         action_id=action_id,
-        action_type="inspect",
         player_action="Inspect surroundings",
         narration=narration,
         mechanical_result={
@@ -331,23 +327,19 @@ def process_talk(
     if npc_state is None:
         raise ValidationError(f"Target NPC '{target_slug}' not found in the session.")
 
-    response = get_dialogue_response(npc_state.npc.data)
-
-    narration = (
-        f"You talk to {npc_state.npc.name}. You say: '{message}'.\n"
-        f"{npc_state.npc.name} responds: '{response}'."
-    )
+    narration = f"You speak to {npc_state.npc.name}."
 
     return create_turn(
         session=session,
         action_id=action_id,
-        action_type="talk",
         player_action=f"Talk to {target_slug}: {message}",
         narration=narration,
         mechanical_result={
             "type": "talk",
             "target": target_slug,
             "message": message,
-            "response": response,
+            "npc_name": npc_state.npc.name,
+            "npc_trust": npc_state.trust,
+            "npc_hostility": npc_state.hostility,
         },
     )

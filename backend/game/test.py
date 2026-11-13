@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
@@ -10,6 +10,7 @@ from rest_framework.test import APIClient
 from characters.models import Character
 from game.mechanics import resolve_attack
 from game.models import GameTurn, NPCState, PlayerState, QuestState
+from narrator.providers import GeminiAIProvider
 from world.models import NPC, Campaign, Location, Quest
 
 from .services import create_game_session
@@ -67,6 +68,15 @@ class GameSessionTests(TestCase):
             hp=20,
             max_hp=20,
             gold=10,
+        )
+
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        self.session = create_game_session(
+            owner=self.user,  # pyright: ignore
+            character=self.character,  # pyright: ignore
+            campaign=self.campaign,  # pyright: ignore
         )
 
     def test_creates_complete_session(self):
@@ -131,6 +141,89 @@ class GameSessionTests(TestCase):
                 character=self.character,  # pyright: ignore
                 campaign=self.campaign,  # pyright: ignore
             )
+
+    def test_duplicate_play_returns_same_turn(self):
+        action_id = uuid4()
+        url = reverse("session-play", args=[self.session.pk])  # pyright: ignore
+
+        payload = {
+            "action_id": str(action_id),
+            "message": "I inspect the room.",
+        }
+
+        first = self.client.post(url, payload, format="json")
+        second = self.client.post(url, payload, format="json")
+
+        self.assertEqual(first.status_code, 201)  # pyright: ignore
+        self.assertEqual(second.status_code, 201)  # pyright: ignore
+        self.assertEqual(first.data, second.data)  # pyright: ignore
+
+        self.session.refresh_from_db()  # pyright: ignore
+        self.assertEqual(self.session.turn_number, 1)  # pyright: ignore
+
+    def test_duplicate_play_rejects_different_message(self):
+        action_id = uuid4()
+        url = reverse("session-play", args=[self.session.pk])  # pyright: ignore
+
+        first = self.client.post(
+            url,
+            {
+                "action_id": str(action_id),
+                "message": "I inspect the room.",
+            },
+            format="json",
+        )
+
+        with self.assertRaisesMessage(
+            ValidationError,
+            f"Existing turn with action_id {action_id} has a different original_message: I inspect the room. vs I attack the Garrick.",
+        ):  # pyright: ignore
+            self.client.post(
+                url,
+                {
+                    "action_id": str(action_id),
+                    "message": "I attack the Garrick.",
+                },
+                format="json",
+            )
+
+        self.assertEqual(first.status_code, 201)  # pyright: ignore
+
+        self.session.refresh_from_db()  # pyright: ignore
+        self.assertEqual(self.session.turn_number, 1)  # pyright: ignore
+
+    def test_narrate_verified_result(self):
+        client = Mock()
+
+        client.models.generate_content.return_value.text = (
+            "Your sword stikes Garrick, but he remains standing."
+        )
+
+        provider = GeminiAIProvider(
+            client=client,
+            model="test-model",
+        )
+
+        context = {
+            "location": {
+                "slug": "lanterns_rest",
+                "name": "Lantern's Rest",
+            },
+            "action": {
+                "original_message": "I attack Garrick.",
+                "mechanical_result": {
+                    "type": "attack",
+                    "target": "garrick_voss",
+                    "target_remaining_hp": 13,
+                    "target_alive": True,
+                },
+            },
+        }
+
+        narration = provider.narrate(context)
+
+        self.assertIn("Garrick", narration)
+        self.assertIn("standing", narration)
 
 
 class AttackMechanicsTest(TestCase):
