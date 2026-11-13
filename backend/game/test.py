@@ -8,8 +8,10 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from characters.models import Character
+from game.knowledge import get_permitted_knowledge
 from game.mechanics import resolve_attack
 from game.models import GameTurn, NPCState, PlayerState, QuestState
+from game.relationships import apply_relationship_event
 from narrator.providers import GeminiAIProvider
 from world.models import NPC, Campaign, Location, Quest
 
@@ -784,7 +786,7 @@ class TalkActionTest(TestCase):
         result = response.data["mechanical_result"]  # pyright: ignore
 
         self.assertEqual(result["type"], "talk")
-        self.assertIn("response", result)
+        self.assertIn("message", result)
 
     def test_duplicate_talk_action_does_not_increment_turn(self):
         action_id = uuid4()
@@ -843,3 +845,130 @@ class TalkActionTest(TestCase):
 
         self.assertEqual(response.status_code, 400)  # pyright: ignore
         self.assertEqual(GameTurn.objects.filter(session=self.session).count(), 0)
+
+
+class NPCKnowledgeTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testplayer",
+            password="testpassword",
+        )
+
+        self.campaign = Campaign.objects.create(
+            slug="test_campaign",
+            title="Test Campaign",
+            data={
+                "starting_state": {
+                    "location": "tavern",
+                    "flags": {"quest_started": False},
+                },
+            },
+        )
+
+        self.location = Location.objects.create(
+            campaign=self.campaign, slug="tavern", name="The Tavern"
+        )
+
+        self.npc = NPC.objects.create(
+            campaign=self.campaign,
+            slug="garrick",
+            name="Garrick",
+            starting_location=self.location,
+            data={
+                "initial_state": {
+                    "hp": 18,
+                    "max_hp": 18,
+                    "alive": True,
+                    "trust": 0,
+                    "hostility": 0,
+                },
+            },
+        )
+        self.character = Character.objects.create(
+            owner=self.user,
+            name="Aric",
+            hp=20,
+            max_hp=20,
+            gold=10,
+        )
+
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        self.session = create_game_session(
+            owner=self.user,  # pyright: ignore
+            character=self.character,  # pyright: ignore
+            campaign=self.campaign,  # pyright: ignore
+        )
+
+    def test_knowledge_unlock(self):
+        npc_state = NPCState.objects.get(
+            session=self.session,
+            npc=self.npc,
+        )
+
+        npc_state.npc.data["knowledge"] = [
+            {
+                "id": "public",
+                "text": "The village is quiet.",
+                "conditions": {"min_trust": 0},
+            },
+            {
+                "id": "private",
+                "text": "I know something important.",
+                "conditions": {"min_trust": 5},
+            },
+        ]
+
+        npc_state.npc.save(update_fields=["data"])
+
+        npc_state.trust = 0
+        npc_state.save(update_fields=["trust"])
+
+        self.assertEqual(
+            get_permitted_knowledge(npc_state.session, npc_state),
+            ["The village is quiet."],
+        )
+
+        npc_state.trust = 5
+        npc_state.save(update_fields=["trust"])
+
+        self.assertEqual(
+            get_permitted_knowledge(npc_state.session, npc_state),
+            [
+                "The village is quiet.",
+                "I know something important.",
+            ],
+        )
+
+    def test_attack_reduces_trust_and_increases_hostility(self):
+        npc_state = NPCState.objects.get(
+            session=self.session,
+            npc=self.npc,
+        )
+
+        npc_state.trust = 0
+        npc_state.hostility = 0
+        npc_state.save(update_fields=["trust", "hostility"])
+
+        apply_relationship_event(npc_state=npc_state, event="attacked_npc")  # pyright: ignore
+        npc_state.refresh_from_db()  # pyright: ignore
+
+        self.assertEqual(npc_state.trust, -5)
+        self.assertEqual(npc_state.hostility, 5)
+
+    def test_relationship_values_are_clamped(self):
+        npc_state = NPCState.objects.get(
+            session=self.session,
+            npc=self.npc,
+        )
+
+        npc_state.trust = -99
+        npc_state.hostility = 99
+        npc_state.save(update_fields=["trust", "hostility"])
+
+        apply_relationship_event(npc_state=npc_state, event="attacked_npc")  # pyright: ignore
+        npc_state.refresh_from_db()  # pyright: ignore
+
+        self.assertEqual(npc_state.trust, -100)
+        self.assertEqual(npc_state.hostility, 100)

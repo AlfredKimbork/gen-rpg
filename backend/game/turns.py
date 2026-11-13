@@ -63,6 +63,6 @@ def create_turn(
     )
 
     session.turn_number = next_turn_number  # pyright: ignore
-    session.save(update_fields=["turn_number", "updated_at"])
+    session.save(update_fields=["turn_number", "updated_at", "created_at"])
 
     return turn

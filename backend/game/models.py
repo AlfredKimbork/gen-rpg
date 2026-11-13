@@ -36,61 +36,6 @@ class GameSession(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class NPCState(models.Model):
-    objects = models.Manager()
-    session = models.ForeignKey(
-        GameSession,
-        on_delete=models.CASCADE,
-        related_name="npc_states",
-    )
-    npc = models.ForeignKey(
-        NPC,
-        on_delete=models.PROTECT,
-    )
-    current_location = models.ForeignKey(
-        Location,
-        on_delete=models.PROTECT,
-    )
-    hp = models.IntegerField()
-    max_hp = models.IntegerField()
-    alive = models.BooleanField(default=True)  # pyright: ignore
-    trust = models.IntegerField(default=0)  # pyright: ignore
-    hostility = models.IntegerField(default=0)  # pyright: ignore
-
-    state = models.JSONField(default=dict)
-
-    class Meta:
-        constraints = (
-            models.UniqueConstraint(
-                fields=["session", "npc"],
-                name="unique_session_npc",
-            ),
-        )
-
-
-class QuestState(models.Model):
-    objects = models.Manager()
-    session = models.ForeignKey(
-        GameSession,
-        on_delete=models.CASCADE,
-        related_name="quest_states",
-    )
-    quest = models.ForeignKey(
-        Quest,
-        on_delete=models.PROTECT,
-    )
-    status = models.CharField(max_length=20, default="not_started")
-    completed_objectives = models.JSONField(default=list)
-
-    class Meta:
-        constraints = (
-            models.UniqueConstraint(
-                fields=["session", "quest"],
-                name="unique_session_quest",
-            ),
-        )
-
-
 class GameTurn(models.Model):
     objects = models.Manager()
     session = models.ForeignKey(
@@ -148,3 +93,81 @@ class PlayerState(models.Model):
 
     def __str__(self):
         return f"Player state for session {self.session_id}"  # pyright: ignore
+
+
+class NPCState(models.Model):
+    objects = models.Manager()
+    session = models.ForeignKey(
+        GameSession,
+        on_delete=models.CASCADE,
+        related_name="npc_states",
+    )
+    npc = models.ForeignKey(
+        NPC,
+        on_delete=models.PROTECT,
+    )
+    current_location = models.ForeignKey(
+        Location,
+        on_delete=models.PROTECT,
+    )
+    hp = models.IntegerField()
+    max_hp = models.IntegerField()
+    alive = models.BooleanField(default=True)  # pyright: ignore
+    trust = models.IntegerField(default=0)  # pyright: ignore
+    hostility = models.IntegerField(default=0)  # pyright: ignore
+
+    state = models.JSONField(default=dict)
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=["session", "npc"],
+                name="unique_session_npc",
+            ),
+        )
+
+
+class NPCMemory(models.Model):
+    objects = models.Manager()
+    npc_state = models.ForeignKey(
+        NPCState,
+        on_delete=models.CASCADE,
+        related_name="memories",
+    )
+
+    turn = models.ForeignKey(
+        GameTurn,
+        on_delete=models.CASCADE,
+        related_name="npc_memories",
+    )
+    summary = models.TextField()
+
+    importance = models.IntegerField(default=1)  # pyright: ignore
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+
+class QuestState(models.Model):
+    objects = models.Manager()
+    session = models.ForeignKey(
+        GameSession,
+        on_delete=models.CASCADE,
+        related_name="quest_states",
+    )
+    quest = models.ForeignKey(
+        Quest,
+        on_delete=models.PROTECT,
+    )
+    status = models.CharField(max_length=20, default="not_started")
+    completed_objectives = models.JSONField(default=list)
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=["session", "quest"],
+                name="unique_session_quest",
+            ),
+        )

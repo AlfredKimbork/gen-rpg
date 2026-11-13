@@ -4,7 +4,9 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 
 from game.mechanics import resolve_attack
+from game.memory import remember
 from game.models import GameSession, GameTurn, NPCState
+from game.relationships import apply_relationship_event
 from game.turns import create_turn, get_existing_turn
 from world.models import Location
 
@@ -102,7 +104,7 @@ def process_attack(
     else:
         narration += f"You miss! {target.npc.name} has {target.hp} HP remaining. "
 
-    return create_turn(
+    turn = create_turn(
         session=session,
         action_id=action_id,
         player_action=f"Attack {target_slug} with {weapon_slug}",
@@ -111,8 +113,21 @@ def process_attack(
             "type": "attack",
             "target": target_slug,
             "weapon": weapon_slug,
+            "relationship_event": "attacked_npc",
+            "npc_trust": target.trust,  # pyright: ignore
+            "npc_hostility": target.hostility,  # pyright: ignore
         },
     )
+
+    apply_relationship_event(npc_state=target, event="attacked_npc")  # pyright: ignore
+    remember(
+        npc_state=target,
+        turn=turn,
+        summary=f"Player attacked {target.npc.name} using {weapon_slug}",
+        importance=5,
+    )  # pyright: ignore
+
+    return turn
 
 
 @transaction.atomic

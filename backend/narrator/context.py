@@ -1,3 +1,5 @@
+from game.knowledge import get_permitted_knowledge
+from game.memory import get_npc_memories
 from game.models import GameSession, GameTurn, NPCState
 from narrator.schemas import AIActionResponse
 
@@ -41,6 +43,8 @@ def build_dialogue_context(session: GameSession, action: AIActionResponse):
         .first()
     )
 
+    memories = get_npc_memories(npc_state)
+
     npc_data = npc_state.npc.data
 
     return {
@@ -50,13 +54,13 @@ def build_dialogue_context(session: GameSession, action: AIActionResponse):
             "role": npc_data.get("role", ""),
             "hostility": npc_state.hostility,
             "trust": npc_state.trust,
-            "public_knowledge": npc_data.get("public_knowledge", []),
         },
+        "memories": memories,
+        "permitted_knowledge": get_permitted_knowledge(session, npc_state),
         "player_message": action.message,
         "location": {
             "slug": session.current_location.slug,  # pyright: ignore
             "name": session.current_location.name,
-            "description": session.current_location.description,
         },
     }
 

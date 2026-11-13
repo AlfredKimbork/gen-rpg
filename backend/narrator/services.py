@@ -6,7 +6,8 @@ from django.core.exceptions import ValidationError
 from rest_framework.exceptions import APIException
 
 from game.actions import process_attack, process_inspect, process_movement, process_talk
-from game.models import GameSession, GameTurn
+from game.memory import remember
+from game.models import GameSession, GameTurn, NPCState
 from narrator.context import (
     build_dialogue_context,
     build_interpreter_context,
@@ -84,8 +85,8 @@ def play_turn(
         case _:
             raise ValidationError(f"Invalid action type: {action.type}")
 
-    # turn.original_message = existing  #   pyright: ignore
-    # turn.save(update_fields=["original_message"])  #  pyright: ignore
+    turn.original_message = message  #   pyright: ignore
+    turn.save(update_fields=["original_message"])  #  pyright: ignore
 
     session.refresh_from_db()  # pyright: ignore
 
@@ -103,6 +104,20 @@ def play_turn(
 
         result = turn.mechanical_result  # pyright: ignore
         result["response"] = dialogue  # pyright: ignore
+
+        npc_state = NPCState.objects.get(
+            session=session,
+            npc__slug=action.target_slug,  # pyright: ignore
+        )
+        remember(
+            npc_state=npc_state,  #  pyright: ignore
+            turn=turn,  # pyright: ignore
+            summary=(
+                f"Player asked: {action.message}. "
+                f"{npc_state.npc.name} replied: {dialogue}"
+            ),
+            importance=2,
+        )
 
     if hasattr(provider, "narrate"):
         narration_context = build_narrator_context(session, turn)  # pyright: ignore
